@@ -221,11 +221,16 @@ const map = L.map('map', {
 });
 
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  maxZoom: 17
+  maxZoom: 19,
+  maxNativeZoom: 19,
+  tileSize: 256,
+  detectRetina: true
 }).addTo(map);
 
 const latLngs = COORDS.map(c => L.latLng(c[0], c[1]));
-map.fitBounds(L.latLngBounds(latLngs), { padding: [70, 70] });
+// fitBounds first, then enforce minimum zoom for sharp tiles
+map.fitBounds(L.latLngBounds(latLngs), { padding: [55, 55] });
+if (map.getZoom() < 14) map.setZoom(14);
 
 // ── CANVAS ────────────────────────────────────────────────────────────────────
 const canvas = document.getElementById('routeCanvas');
